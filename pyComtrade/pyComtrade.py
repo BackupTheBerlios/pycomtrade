@@ -97,8 +97,61 @@ class pyComtrade:
             self.secondary.append(float(templist[11]))
             self.PS.append(templist[12])
 
+        # Processing digital channel lines:
+        for i in range(self.D):
+            line = self.filehandler.readline()
+            templist = line.split(',')
+            self.Dn.append(int(templist[0]))
+            self.Dch_id.append(templist[1])
+            self.Dph.append(templist[2])
+            self.Dccbm.append(templist[3])
+            self.y.append(int(templist[4]))
 
-        self.filehandler.close()
+        # Read line frequency:
+        self.lf = int(self.filehandler.readline())
+
+        # Read sampling rates:
+        self.nrates = int(self.filehandler.readline()) # nrates.
+        for i in range(self.nrates):
+            line = self.filehandler.readline()
+            templist = line.split(',')
+            self.samp.append(int(templist[0]))
+            self.endsamp.append(int(templist[1]))
+
+        # Read start date and time ([dd,mm,yyyy,hh,mm,ss.ssssss]):
+        line = self.filehandler.readline()
+        templist = line.split('/')
+        self.start[0] = int(templist[0]) # day.
+        self.start[1] = int(templist[1]) # month.
+        templist = templist[2].split(',')
+        self.start[2] = int(templist[0]) # year.
+        templist = templist[1].split(':')
+        self.start[3] = int(templist[0]) # hours.
+        self.start[4] = int(templist[1]) # minutes.
+        self.start[5] = float(templist[2]) # seconds.
+
+        # Read trigger date and time ([dd,mm,yyyy,hh,mm,ss.ssssss]):
+        line = self.filehandler.readline()
+        templist = line.split('/')
+        self.trigger[0] = int(templist[0]) # day.
+        self.trigger[1] = int(templist[1]) # month.
+        templist = templist[2].split(',')
+        self.trigger[2] = int(templist[0]) # year.
+        templist = templist[1].split(':')
+        self.trigger[3] = int(templist[0]) # hours.
+        self.trigger[4] = int(templist[1]) # minutes.
+        self.trigger[5] = float(templist[2]) # seconds.
+
+        # Read file type:
+        self.ft = self.filehandler.readline()
+        
+        # Read time multiplication factor:
+        self.timemul = float(self.filehandler.readline())
+
+        # END READING .CFG FILE.
+        
+        self.filehandler.close() # Close file.
+
 
 
 teste = pyComtrade()
